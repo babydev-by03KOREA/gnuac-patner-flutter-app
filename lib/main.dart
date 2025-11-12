@@ -1,13 +1,21 @@
 import 'package:flutter/material.dart';
 import 'package:flutter_dotenv/flutter_dotenv.dart';
+import 'package:patner_app/core/env.dart';
 import 'package:supabase_flutter/supabase_flutter.dart';
+import 'package:flutter_riverpod/flutter_riverpod.dart';
 
 void main() async {
   WidgetsFlutterBinding.ensureInitialized();
-  await dotenv.load(fileName: ".env");
+
+  final env = await AppEnv.load();
   await Supabase.initialize(
-    url: dotenv.get("PROJECT_URL"),
-    anonKey: dotenv.get("PROJECT_API_KEY"),
+    url: env.supabaseUrl,
+    anonKey: env.supabaseAnonKey,
+    authOptions: const FlutterAuthClientOptions(
+      autoRefreshToken: true,
+      detectSessionInUri: true,
+    ),
   );
-  // runApp();
+
+  runApp(const ProviderScope(child: App()));
 }
