@@ -1,5 +1,6 @@
 import 'package:flutter/material.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
+import 'package:patner_app/app/theme.dart';
 import '../../../app/router.dart';
 import '../application/auth_controller.dart';
 import 'package:go_router/go_router.dart';
@@ -18,7 +19,7 @@ class _SignInScreenState extends ConsumerState<SignInScreen> {
   @override
   Widget build(BuildContext context) {
     final state = ref.watch(authControllerProvider);
-    return Scaffold(
+    return GradientScaffold(
       body: Center(
         child: ConstrainedBox(
           constraints: const BoxConstraints(maxWidth: 420),

@@ -12,6 +12,7 @@ class App extends StatelessWidget {
       title: 'Petner',
       theme: buildTheme(),
       routerConfig: router,
+      debugShowCheckedModeBanner: false,
     );
   }
 }

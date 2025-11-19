@@ -1,3 +1,4 @@
+import 'package:flutter/cupertino.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
 import 'package:flutter_riverpod/legacy.dart';
 import 'package:supabase_flutter/supabase_flutter.dart';
@@ -37,6 +38,7 @@ class AuthController extends StateNotifier<AuthState> {
           .signIn(email: email, password: password);
       return true;
     } on AuthException catch (e) {
+      debugPrint("AuthException: ${e.message}");
       state = state.copyWith(error: e.message);
       return false;
     } finally {
@@ -56,6 +58,7 @@ class AuthController extends StateNotifier<AuthState> {
           .signUp(email: email, password: password, userMeta: meta);
       return true;
     } on AuthException catch (e) {
+      debugPrint("AuthException: ${e.message}");
       state = state.copyWith(error: e.message);
       return false;
     } finally {
