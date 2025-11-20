@@ -20,10 +20,10 @@ class GuideRecommendScreen extends ConsumerWidget {
         padding: const EdgeInsets.all(16),
         child: Column(
           children: [
-            const LogoHeader(title: '서로 및 간식 추천'),
+            const LogoHeader(title: '사료 및 간식 추천'),
             // 간식 추천 섹션
             _RecommendSection<SnackItem>(
-              title: '서로 및 간식 추천',
+              title: '사료 및 간식 추천',
               items: snacks,
               itemBuilder: (item) => SnackCard(item: item),
             ),
