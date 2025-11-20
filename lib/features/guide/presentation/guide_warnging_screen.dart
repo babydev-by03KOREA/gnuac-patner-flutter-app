@@ -26,6 +26,7 @@ class GuideWarningScreen extends ConsumerWidget {
               subtitle: '추후 개선 예정',
             ),
             Card(
+              color: Color(0xffC87D80),
               child: Padding(
                 padding: const EdgeInsets.all(16),
                 child: Column(

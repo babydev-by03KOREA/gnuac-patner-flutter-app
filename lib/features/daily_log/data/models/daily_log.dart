@@ -1,4 +1,6 @@
 // DailyLog, FoodEntry, ExerciseEntry..
+import 'package:patner_app/features/daily_log/data/models/exercise_type.dart';
+
 class FoodEntry {
   final String name;
   final int amountGram; // 섭취량(g)
@@ -11,18 +13,47 @@ class FoodEntry {
     required this.kcal,
     required this.proteinGram,
   });
+
+  factory FoodEntry.fromJson(Map<String, dynamic> json) {
+    return FoodEntry(
+      name: json['food_name'] as String? ?? '',
+      amountGram: json['amount_gram'] as int? ?? 0,
+      kcal: json['kcal'] as int? ?? 0,
+      proteinGram: json['protein'] as int? ?? 0,
+    );
+  }
 }
 
 class ExerciseEntry {
   final String description; // 산책 30분, 터그놀이 20분..
   final String duration; // "30분", "20분" ..
+  final ExerciseType type;
 
-  ExerciseEntry({required this.description, required this.duration});
+  ExerciseEntry({
+    required this.description,
+    required this.duration,
+    required this.type,
+  });
+
+  Map<String, dynamic> toJson() => {
+    'description': description,
+    'duration': duration,
+    'type': type.name, // Supabase에 문자열로 저장
+  };
+
+  factory ExerciseEntry.fromJson(Map<String, dynamic> json) {
+    return ExerciseEntry(
+      description: json['description'] as String,
+      duration: json['duration'] as String,
+      type: ExerciseTypeInfo.fromName(json['type'] as String?),
+    );
+  }
 }
 
 class DailyChecklist {
   final bool q1, q2, q3, q4, q5;
   final String memo;
+
   const DailyChecklist({
     this.q1 = false,
     this.q2 = false,
@@ -53,13 +84,22 @@ class DailyChecklist {
 
 class DailyLog {
   final DateTime date;
+
+  // 오늘 값
+  final int todayKcal;
+  final int todayProtein;
   final double weightKg;
+
+  // 목표 값
   final int targetKcal;
   final int targetProtein;
+
+  // 실제 운동 여부
   final bool exerciseDone;
   final List<FoodEntry> foods;
   final List<ExerciseEntry> exercises;
   final DailyChecklist checklist;
+  final String memo;
 
   const DailyLog({
     required this.date,
@@ -67,9 +107,12 @@ class DailyLog {
     required this.targetKcal,
     required this.targetProtein,
     required this.exerciseDone,
+    this.todayKcal = 0,
+    this.todayProtein = 0,
     this.foods = const [],
     this.exercises = const [],
     this.checklist = const DailyChecklist(),
+    this.memo = ''
   });
 
   DailyLog copyWith({

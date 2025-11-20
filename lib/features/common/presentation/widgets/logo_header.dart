@@ -1,13 +1,9 @@
 import 'package:flutter/material.dart';
 
 class LogoHeader extends StatelessWidget {
-  const LogoHeader({
-    super.key,
-    required this.title,
-    this.subtitle,
-  });
+  const LogoHeader({super.key, this.title, this.subtitle});
 
-  final String title;
+  final String? title;
   final String? subtitle;
 
   @override
@@ -18,21 +14,18 @@ class LogoHeader extends StatelessWidget {
         Container(
           width: 60,
           height: 60,
-          decoration: BoxDecoration(
-            shape: BoxShape.circle,
-            border: Border.all(color: Colors.black, width: 1),
-          ),
-          alignment: Alignment.center,
-          child: const Text('로고'),
-        ),
-        const SizedBox(height: 12),
-        Text(
-          title,
-          style: const TextStyle(
-            fontSize: 18,
-            fontWeight: FontWeight.w800,
+          decoration: BoxDecoration(shape: BoxShape.circle),
+          child: ClipOval(
+            child: Image.asset('assets/logo.jpg', fit: BoxFit.cover),
           ),
         ),
+        if (title != null) ...[
+          const SizedBox(height: 12),
+          Text(
+            title!,
+            style: const TextStyle(fontSize: 18, fontWeight: FontWeight.w800),
+          ),
+        ],
         if (subtitle != null) ...[
           const SizedBox(height: 4),
           Text(

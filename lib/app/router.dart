@@ -3,6 +3,7 @@ import 'package:flutter/foundation.dart';
 import 'package:flutter/material.dart';
 import 'package:go_router/go_router.dart';
 import 'package:patner_app/features/daily_log/presentation/screens/daily_log_screen.dart';
+import 'package:patner_app/features/home/presentation/main_shell.dart';
 import 'package:supabase_flutter/supabase_flutter.dart';
 
 import '../features/auth/presentation/sign_in_screen.dart';
@@ -50,7 +51,7 @@ GoRouter buildRouter() {
       GoRoute(
         path: '/home',
         name: 'home',
-        builder: (_, __) => const HomeScreen(),
+        builder: (_, __) => const MainShell(),
         // 로그인 안되어 있으면 차단
         redirect: (_, __) => _isSignedIn ? null : '/sign-in',
       ),

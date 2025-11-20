@@ -1,24 +1,48 @@
 // Riverpod StateNotifier<DailyLog>
 import 'package:flutter_riverpod/flutter_riverpod.dart';
 import 'package:flutter_riverpod/legacy.dart';
+import 'package:patner_app/core/providers/supabase_client_provider.dart';
+import 'package:patner_app/features/daily_log/data/daily_log_repository.dart';
 import 'package:patner_app/features/daily_log/data/models/daily_log.dart';
+import 'package:patner_app/features/daily_log/data/daily_log_repository.dart';
 
 final dailyLogControllerProvider =
-    StateNotifierProvider.autoDispose<DailyLogController, DailyLog>((ref) {
-      // 기본값(오늘 날짜, 기본 목표치) 세팅
-      return DailyLogController(
-        DailyLog(
-          date: DateTime.now(),
-          weightKg: 0,
-          targetKcal: 100,
-          targetProtein: 20,
-          exerciseDone: false,
-        ),
-      );
-    });
+StateNotifierProvider.autoDispose<DailyLogController, DailyLog>((ref) {
+  final repo = ref.watch(dailyLogRepositoryProvider);
+  final today = DateTime.now();
+  final controller = DailyLogController(repo, today);
+  // controller.load(); // 오늘 데이터 로딩
+  return controller;
+});
 
 class DailyLogController extends StateNotifier<DailyLog> {
-  DailyLogController(super.state);
+  DailyLogController(this._repo, DateTime date)
+      : super(DailyLog(
+    date: date,
+    weightKg: 0,
+    targetKcal: 100,
+    targetProtein: 20,
+    exerciseDone: false,
+  ));
+
+  final DailyLogRepository _repo;
+
+  Future<void> load() async {
+    final data = await _repo.fetch(state.date);
+    if (data != null) state = data;
+  }
+
+  Future<void> save() async {
+    await _repo.save(state);
+  }
+
+  void addExercise(ExerciseEntry entry) {
+    state = state.copyWith(
+      exercises: [...state.exercises, entry],
+      exerciseDone: true,
+    );
+    // 필요하면 여기서 바로 save() 호출하거나, 상단 저장 버튼에서만 저장
+  }
 
   void updateWeight(double kg) {
     state = DailyLog(
@@ -46,14 +70,6 @@ class DailyLogController extends StateNotifier<DailyLog> {
     );
   }
 
-  void addExercise(ExerciseEntry entry) {
-    state = state.copyWith(
-      exercises: [...state.exercises, entry],
-      // 운동 기록이 하나라도 있으면 exerciseDone = true 로 자동 세팅하고 싶으면:
-      exerciseDone: true,
-    );
-  }
-
   void updateChecklist(DailyChecklist checklist) {
     state = DailyLog(
       date: state.date,
@@ -66,4 +82,22 @@ class DailyLogController extends StateNotifier<DailyLog> {
       checklist: checklist,
     );
   }
+
+  void updateGoals(int kcal, int protein) {
+    state = state.copyWith(
+      targetKcal: kcal,
+      targetProtein: protein,
+    );
+  }
+
+  void updateExerciseGoal(bool goal) {
+    state = state.copyWith(
+      exerciseDone: goal,
+    );
+  }
 }
+
+final dailyLogRepositoryProvider = Provider<DailyLogRepository>((ref) {
+  final client = ref.watch(supabaseProvider);
+  return DailyLogRepository(client);
+});
