@@ -84,20 +84,19 @@ class DailyChecklist {
 
 class DailyLog {
   final DateTime date;
+  final double weightKg;
+  final int targetKcal;
+  final int targetProtein;
+  final bool exerciseDone;
 
   // 오늘 값
   final int todayKcal;
   final int todayProtein;
-  final double weightKg;
 
-  // 목표 값
-  final int targetKcal;
-  final int targetProtein;
-
-  // 실제 운동 여부
-  final bool exerciseDone;
+  // 리스트들
   final List<FoodEntry> foods;
   final List<ExerciseEntry> exercises;
+
   final DailyChecklist checklist;
   final String memo;
 
@@ -112,7 +111,7 @@ class DailyLog {
     this.foods = const [],
     this.exercises = const [],
     this.checklist = const DailyChecklist(),
-    this.memo = ''
+    this.memo = '',
   });
 
   DailyLog copyWith({
@@ -121,9 +120,12 @@ class DailyLog {
     int? targetKcal,
     int? targetProtein,
     bool? exerciseDone,
+    int? todayKcal,
+    int? todayProtein,
     List<FoodEntry>? foods,
     List<ExerciseEntry>? exercises,
     DailyChecklist? checklist,
+    String? memo,
   }) {
     return DailyLog(
       date: date ?? this.date,
@@ -131,9 +133,12 @@ class DailyLog {
       targetKcal: targetKcal ?? this.targetKcal,
       targetProtein: targetProtein ?? this.targetProtein,
       exerciseDone: exerciseDone ?? this.exerciseDone,
+      todayKcal: todayKcal ?? this.todayKcal,
+      todayProtein: todayProtein ?? this.todayProtein,
       foods: foods ?? this.foods,
       exercises: exercises ?? this.exercises,
       checklist: checklist ?? this.checklist,
+      memo: memo ?? this.memo,
     );
   }
 }

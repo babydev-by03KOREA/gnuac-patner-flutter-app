@@ -55,43 +55,49 @@ class _DailyLogScreenState extends ConsumerState<DailyLogScreen> {
 
     return GradientScaffold(
       extendBodyBehindAppBar: false,
-      body: SafeArea(
-        child: Center(
-          child: SingleChildScrollView(
-            padding: const EdgeInsets.symmetric(horizontal: 20, vertical: 16),
-            child: Column(
-              crossAxisAlignment: CrossAxisAlignment.stretch,
-              children: [
-                const LogoHeader(),
-                HeaderDateWeight(log: log),
-                const SizedBox(height: 16),
-                GoalCard(log: log),
-                const SizedBox(height: 16),
-                FoodSection(log: log),
-                const SizedBox(height: 16),
-                ExerciseSection(log: log),
-                const SizedBox(height: 16),
-                DiarySection(log: log),
-                const SizedBox(height: 16),
-                SizedBox(
-                  width: double.infinity,
-                  child: ElevatedButton(
-                    onPressed: _saving ? null : _onSave,
-                    child: _saving
-                        ? const SizedBox(
-                            width: 18,
-                            height: 18,
-                            child: CircularProgressIndicator(
-                              strokeWidth: 2,
-                              color: Colors.white,
-                            ),
-                          )
-                        : const Text('오늘 기록 저장하기'),
+      body: GestureDetector(
+        behavior: HitTestBehavior.translucent,
+        onTap: () {
+          FocusScope.of(context).unfocus(); // 포커스 제거 = 키보드 내려감
+        },
+        child: SafeArea(
+          child: Center(
+            child: SingleChildScrollView(
+              padding: const EdgeInsets.symmetric(horizontal: 20, vertical: 16),
+              child: Column(
+                crossAxisAlignment: CrossAxisAlignment.stretch,
+                children: [
+                  const LogoHeader(),
+                  HeaderDateWeight(log: log),
+                  const SizedBox(height: 16),
+                  GoalCard(log: log),
+                  const SizedBox(height: 16),
+                  FoodSection(log: log),
+                  const SizedBox(height: 16),
+                  ExerciseSection(log: log),
+                  const SizedBox(height: 16),
+                  DiarySection(log: log),
+                  const SizedBox(height: 16),
+                  SizedBox(
+                    width: double.infinity,
+                    child: ElevatedButton(
+                      onPressed: _saving ? null : _onSave,
+                      child: _saving
+                          ? const SizedBox(
+                              width: 18,
+                              height: 18,
+                              child: CircularProgressIndicator(
+                                strokeWidth: 2,
+                                color: Colors.white,
+                              ),
+                            )
+                          : const Text('오늘 기록 저장하기'),
+                    ),
                   ),
-                ),
 
-                if (_saving) Container(color: Colors.black.withOpacity(0.1)),
-              ],
+                  if (_saving) Container(color: Colors.black.withOpacity(0.1)),
+                ],
+              ),
             ),
           ),
         ),

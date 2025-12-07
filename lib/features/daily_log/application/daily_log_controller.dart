@@ -58,15 +58,20 @@ class DailyLogController extends StateNotifier<DailyLog> {
   }
 
   void addFood(FoodEntry entry) {
-    state = DailyLog(
-      date: state.date,
-      weightKg: state.weightKg,
-      targetKcal: state.targetKcal,
-      targetProtein: state.targetProtein,
-      exerciseDone: state.exerciseDone,
-      foods: [...state.foods, entry],
-      exercises: state.exercises,
-      checklist: state.checklist,
+    // 1) 새로 추가된 음식까지 포함한 리스트
+    final updatedFoods = [...state.foods, entry];
+
+    // 2) 오늘 총 칼로리 / 단백질 계산
+    final todayKcal =
+    updatedFoods.fold<int>(0, (sum, f) => sum + f.kcal);
+    final todayProtein =
+    updatedFoods.fold<int>(0, (sum, f) => sum + f.proteinGram);
+
+    // 3) 상태 업데이트
+    state = state.copyWith(
+      foods: updatedFoods,
+      todayKcal: todayKcal,
+      todayProtein: todayProtein,
     );
   }
 
